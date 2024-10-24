@@ -1,9 +1,9 @@
 package com.example.vritual.dto;
 
-public record StudentDTO(
+public record SchoolClassDTO(
         Long id,
+        String description,
         String name,
-        String email,
         boolean active,
-        Long classId
+        Long teacherId
 ) {}

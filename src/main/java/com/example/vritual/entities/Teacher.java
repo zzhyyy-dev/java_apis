@@ -1,15 +1,16 @@
 package com.example.vritual.entities;
 
+
+
 import jakarta.persistence.*;
 import lombok.Data;
-
 
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "teacher")
 @Data
-@Table(name = "student")
-public class User {
+public class Teacher {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,12 +25,16 @@ public class User {
     @Column(nullable = false, length = 255)
     private String password;
 
-    @Column(name = "active", nullable = false)
-    private boolean active;
+    @Column(nullable = false)
+    private boolean active = true;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @Column(nullable = false, columnDefinition = "TIMESTAMP")
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @Column(nullable = false, columnDefinition = "TIMESTAMP")
+    private LocalDateTime updatedAt = LocalDateTime.now();
+
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime deletedAt;
 }
+
