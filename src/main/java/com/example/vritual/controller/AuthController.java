@@ -1,11 +1,11 @@
 package com.example.vritual.controller;
 
+import com.example.vritual.dto.AuthResponseDTO;
+import com.example.vritual.dto.LoginDTO;
 import com.example.vritual.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -19,12 +19,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> credentials) {
-        String email = credentials.get("email");
-        String password = credentials.get("password");
-
-        // Autentica o usuário e retorna o tipo e ID do usuário
-        Map<String, Object> response = authService.authenticateUser(email, password);
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDTO loginDTO) {
+        AuthResponseDTO response = authService.authenticateUser(loginDTO);
         return ResponseEntity.ok(response);
     }
 }

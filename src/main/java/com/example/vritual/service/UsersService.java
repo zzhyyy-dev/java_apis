@@ -1,15 +1,20 @@
 package com.example.vritual.service;
 
+import com.example.vritual.dto.SchoolClassDTO;
+import com.example.vritual.dto.StudentDTO;
+import com.example.vritual.dto.UserDTO;
+import com.example.vritual.dto.UserReadDTO;
 import com.example.vritual.entities.Administrator;
+import com.example.vritual.entities.SchoolClass;
 import com.example.vritual.entities.Student;
 import com.example.vritual.entities.Teacher;
 import com.example.vritual.repository.AdministratorRepository;
+
+import com.example.vritual.repository.SchoolClassRepository;
 import com.example.vritual.repository.StudentRepository;
 import com.example.vritual.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -27,180 +32,152 @@ public class UsersService {
     @Autowired
     private AdministratorRepository administratorRepository;
 
-    // Método para criar um usuário
-    public Map<String, Object> createUser(String userType, Map<String, Object> userDetails) {
+    @Autowired
+    private SchoolClassRepository schoolClassRepository;
+
+    public UserReadDTO createUser(String userType, UserDTO userDTO) {
         if (userType.equalsIgnoreCase("student")) {
             Student student = new Student();
-            student.setName((String) userDetails.get("name"));
-            student.setEmail((String) userDetails.get("email"));
-            student.setPassword((String) userDetails.get("password"));
+            student.setName(userDTO.name());
+            student.setEmail(userDTO.email());
+            student.setPassword(userDTO.password());
             student.setActive(true);
             student.setCreatedAt(LocalDateTime.now());
             student.setUpdatedAt(LocalDateTime.now());
-            studentRepository.save(student);
 
-            return Map.of(
-                    "id", student.getId(),
-                    "message", "Student created successfully."
-            );
+            if (userDTO.classId() != null) {
+                SchoolClass schoolClass = schoolClassRepository.findById(userDTO.classId())
+                        .orElseThrow(() -> new IllegalArgumentException("Class not found with ID: " + userDTO.classId()));
+                student.setSchoolClass(schoolClass);
+            }
+
+            studentRepository.save(student);
+            return new UserReadDTO(student.getId(), student.getName(), student.getEmail(), student.isActive());
 
         } else if (userType.equalsIgnoreCase("teacher")) {
             Teacher teacher = new Teacher();
-            teacher.setName((String) userDetails.get("name"));
-            teacher.setEmail((String) userDetails.get("email"));
-            teacher.setPassword((String) userDetails.get("password"));
+            teacher.setName(userDTO.name());
+            teacher.setEmail(userDTO.email());
+            teacher.setPassword(userDTO.password());
             teacher.setActive(true);
             teacher.setCreatedAt(LocalDateTime.now());
             teacher.setUpdatedAt(LocalDateTime.now());
             teacherRepository.save(teacher);
 
-            return Map.of(
-                    "id", teacher.getId(),
-                    "message", "Teacher created successfully."
-            );
+            return new UserReadDTO(teacher.getId(), teacher.getName(), teacher.getEmail(), teacher.isActive());
 
         } else if (userType.equalsIgnoreCase("administrator")) {
             Administrator administrator = new Administrator();
-            administrator.setName((String) userDetails.get("name"));
-            administrator.setEmail((String) userDetails.get("email"));
-            administrator.setPassword((String) userDetails.get("password"));
+            administrator.setName(userDTO.name());
+            administrator.setEmail(userDTO.email());
+            administrator.setPassword(userDTO.password());
             administrator.setActive(true);
             administrator.setCreatedAt(LocalDateTime.now());
             administrator.setUpdatedAt(LocalDateTime.now());
             administratorRepository.save(administrator);
 
-            return Map.of(
-                    "id", administrator.getId(),
-                    "message", "Administrator created successfully."
-            );
+            return new UserReadDTO(administrator.getId(), administrator.getName(), administrator.getEmail(), administrator.isActive());
 
         } else {
             throw new IllegalArgumentException("Invalid user type: " + userType);
         }
     }
 
-    // Método para atualizar um usuário
-    public Map<String, Object> updateUser(String userType, int id, Map<String, Object> userDetails) {
+
+    public UserReadDTO updateUser(String userType, int id, UserDTO userDTO) {
         if (userType.equalsIgnoreCase("student")) {
             Student student = studentRepository.findById((long) id)
-                    .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+                    .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + id));
 
-            if (userDetails.containsKey("name")) student.setName((String) userDetails.get("name"));
-            if (userDetails.containsKey("email")) student.setEmail((String) userDetails.get("email"));
-            if (userDetails.containsKey("password")) student.setPassword((String) userDetails.get("password"));
+            if (userDTO.email() != null) {
+                student.setEmail(userDTO.email());
+            }
+
+            if (userDTO.password() != null) {
+                student.setPassword(userDTO.password());
+            }
+
             student.setUpdatedAt(LocalDateTime.now());
             studentRepository.save(student);
-
-            return Map.of(
-                    "id", student.getId(),
-                    "message", "Student updated successfully."
-            );
+            return new UserReadDTO(student.getId(), student.getName(), student.getEmail(), student.isActive());
 
         } else if (userType.equalsIgnoreCase("teacher")) {
             Teacher teacher = teacherRepository.findById((long) id)
-                    .orElseThrow(() -> new IllegalArgumentException("Teacher not found"));
+                    .orElseThrow(() -> new IllegalArgumentException("Teacher not found with ID: " + id));
 
-            if (userDetails.containsKey("name")) teacher.setName((String) userDetails.get("name"));
-            if (userDetails.containsKey("email")) teacher.setEmail((String) userDetails.get("email"));
-            if (userDetails.containsKey("password")) teacher.setPassword((String) userDetails.get("password"));
+            if (userDTO.email() != null) {
+                teacher.setEmail(userDTO.email());
+            }
+
+            if (userDTO.password() != null) {
+                teacher.setPassword(userDTO.password());
+            }
+
             teacher.setUpdatedAt(LocalDateTime.now());
             teacherRepository.save(teacher);
-
-            return Map.of(
-                    "id", teacher.getId(),
-                    "message", "Teacher updated successfully."
-            );
+            return new UserReadDTO(teacher.getId(), teacher.getName(), teacher.getEmail(), teacher.isActive());
 
         } else if (userType.equalsIgnoreCase("administrator")) {
             Administrator administrator = administratorRepository.findById((long) id)
-                    .orElseThrow(() -> new IllegalArgumentException("Administrator not found"));
+                    .orElseThrow(() -> new IllegalArgumentException("Administrator not found with ID: " + id));
 
-            if (userDetails.containsKey("name")) administrator.setName((String) userDetails.get("name"));
-            if (userDetails.containsKey("email")) administrator.setEmail((String) userDetails.get("email"));
-            if (userDetails.containsKey("password")) administrator.setPassword((String) userDetails.get("password"));
+            if (userDTO.email() != null) {
+                administrator.setEmail(userDTO.email());
+            }
+
+            if (userDTO.password() != null) {
+                administrator.setPassword(userDTO.password());
+            }
+
             administrator.setUpdatedAt(LocalDateTime.now());
             administratorRepository.save(administrator);
-
-            return Map.of(
-                    "id", administrator.getId(),
-                    "message", "Administrator updated successfully."
-            );
+            return new UserReadDTO(administrator.getId(), administrator.getName(), administrator.getEmail(), administrator.isActive());
 
         } else {
             throw new IllegalArgumentException("Invalid user type: " + userType);
         }
     }
 
-    // Método para ler um usuário pelo ID
-    public Map<String, Object> readUser(String userType, int id) {
+
+    public UserReadDTO readUser(String userType, int id) {
         if (userType.equalsIgnoreCase("student")) {
             Student student = studentRepository.findById((long) id)
                     .orElseThrow(() -> new IllegalArgumentException("Student not found"));
 
-            return Map.of(
-                    "id", student.getId(),
-                    "name", student.getName(),
-                    "email", student.getEmail(),
-                    "active", student.isActive()
-            );
+            return new UserReadDTO(student.getId(), student.getName(), student.getEmail(), student.isActive());
 
         } else if (userType.equalsIgnoreCase("teacher")) {
             Teacher teacher = teacherRepository.findById((long) id)
                     .orElseThrow(() -> new IllegalArgumentException("Teacher not found"));
 
-            return Map.of(
-                    "id", teacher.getId(),
-                    "name", teacher.getName(),
-                    "email", teacher.getEmail(),
-                    "active", teacher.isActive()
-            );
+            return new UserReadDTO(teacher.getId(), teacher.getName(), teacher.getEmail(), teacher.isActive());
 
         } else if (userType.equalsIgnoreCase("administrator")) {
             Administrator administrator = administratorRepository.findById((long) id)
                     .orElseThrow(() -> new IllegalArgumentException("Administrator not found"));
 
-            return Map.of(
-                    "id", administrator.getId(),
-                    "name", administrator.getName(),
-                    "email", administrator.getEmail(),
-                    "active", administrator.isActive()
-            );
+            return new UserReadDTO(administrator.getId(), administrator.getName(), administrator.getEmail(), administrator.isActive());
 
         } else {
             throw new IllegalArgumentException("Invalid user type: " + userType);
         }
     }
 
-    // Método para ler todos os usuários de um tipo específico
-    public List<Map<String, Object>> readAllUsers(String userType) {
+
+    public List<UserReadDTO> readAllUsers(String userType) {
         if (userType.equalsIgnoreCase("student")) {
             return studentRepository.findAll().stream()
-                    .map(student -> Map.<String, Object>of(
-                            "id", student.getId(),
-                            "name", student.getName(),
-                            "email", student.getEmail(),
-                            "active", student.isActive()
-                    ))
+                    .map(student -> new UserReadDTO(student.getId(), student.getName(), student.getEmail(), student.isActive()))
                     .collect(Collectors.toList());
 
         } else if (userType.equalsIgnoreCase("teacher")) {
             return teacherRepository.findAll().stream()
-                    .map(teacher -> Map.<String, Object>of(
-                            "id", teacher.getId(),
-                            "name", teacher.getName(),
-                            "email", teacher.getEmail(),
-                            "active", teacher.isActive()
-                    ))
+                    .map(teacher -> new UserReadDTO(teacher.getId(), teacher.getName(), teacher.getEmail(), teacher.isActive()))
                     .collect(Collectors.toList());
 
         } else if (userType.equalsIgnoreCase("administrator")) {
             return administratorRepository.findAll().stream()
-                    .map(admin -> Map.<String, Object>of(
-                            "id", admin.getId(),
-                            "name", admin.getName(),
-                            "email", admin.getEmail(),
-                            "active", admin.isActive()
-                    ))
+                    .map(admin -> new UserReadDTO(admin.getId(), admin.getName(), admin.getEmail(), admin.isActive()))
                     .collect(Collectors.toList());
 
         } else {
@@ -209,8 +186,7 @@ public class UsersService {
     }
 
 
-    // Método para deleção lógica de um usuário
-    public Map<String, Object> deleteUser(String userType, int id) {
+    public UserReadDTO deleteUser(String userType, int id) {
         if (userType.equalsIgnoreCase("student")) {
             Student student = studentRepository.findById((long) id)
                     .orElseThrow(() -> new IllegalArgumentException("Student not found"));
@@ -219,10 +195,7 @@ public class UsersService {
             student.setUpdatedAt(LocalDateTime.now());
             studentRepository.save(student);
 
-            return Map.of(
-                    "id", student.getId(),
-                    "active", student.isActive()
-            );
+            return new UserReadDTO(student.getId(), student.getName(), student.getEmail(), student.isActive());
 
         } else if (userType.equalsIgnoreCase("teacher")) {
             Teacher teacher = teacherRepository.findById((long) id)
@@ -232,10 +205,7 @@ public class UsersService {
             teacher.setUpdatedAt(LocalDateTime.now());
             teacherRepository.save(teacher);
 
-            return Map.of(
-                    "id", teacher.getId(),
-                    "active", teacher.isActive()
-            );
+            return new UserReadDTO(teacher.getId(), teacher.getName(), teacher.getEmail(), teacher.isActive());
 
         } else if (userType.equalsIgnoreCase("administrator")) {
             Administrator administrator = administratorRepository.findById((long) id)
@@ -245,13 +215,74 @@ public class UsersService {
             administrator.setUpdatedAt(LocalDateTime.now());
             administratorRepository.save(administrator);
 
-            return Map.of(
-                    "id", administrator.getId(),
-                    "active", administrator.isActive()
-            );
+            return new UserReadDTO(administrator.getId(), administrator.getName(), administrator.getEmail(), administrator.isActive());
 
         } else {
             throw new IllegalArgumentException("Invalid user type: " + userType);
         }
     }
+
+    public UserReadDTO changeStudentClass(Long studentId, Long newClassId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + studentId));
+
+        SchoolClass newClass = schoolClassRepository.findById(newClassId)
+                .orElseThrow(() -> new IllegalArgumentException("Class not found with ID: " + newClassId));
+
+        student.setSchoolClass(newClass);
+        student.setUpdatedAt(LocalDateTime.now());
+        studentRepository.save(student);
+
+        return new UserReadDTO(student.getId(), student.getName(), student.getEmail(), student.isActive());
+    }
+
+    public Map<String, Object> changeClassTeacher(Long classId, Long newTeacherId) {
+        SchoolClass schoolClass = schoolClassRepository.findById(classId)
+                .orElseThrow(() -> new IllegalArgumentException("Class not found with ID: " + classId));
+
+        Teacher newTeacher = teacherRepository.findById(newTeacherId)
+                .orElseThrow(() -> new IllegalArgumentException("Teacher not found with ID: " + newTeacherId));
+
+        schoolClass.setTeacher(newTeacher);
+        schoolClass.setUpdatedAt(LocalDateTime.now());
+        schoolClassRepository.save(schoolClass);
+
+        return Map.of(
+                "classId", schoolClass.getId(),
+                "newTeacherId", newTeacher.getId(),
+                "message", "Teacher changed successfully"
+        );
+    }
+
+    public List<SchoolClassDTO> getTeacherClasses(Long teacherId) {
+        Teacher teacher = teacherRepository.findById(teacherId)
+                .orElseThrow(() -> new IllegalArgumentException("Teacher not found with ID: " + teacherId));
+
+        List<SchoolClass> classes = schoolClassRepository.findByTeacher(teacher);
+
+        return classes.stream()
+                .map(schoolClass -> new SchoolClassDTO(
+                        schoolClass.getId(),
+                        schoolClass.getName(),
+                        schoolClass.getDescription()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    public List<StudentDTO> getStudentsByClass(Long classId) {
+        SchoolClass schoolClass = schoolClassRepository.findById(classId)
+                .orElseThrow(() -> new IllegalArgumentException("Class not found with ID: " + classId));
+
+        List<Student> students = studentRepository.findBySchoolClass(schoolClass);
+
+        return students.stream()
+                .map(student -> new StudentDTO(
+                        student.getId(),
+                        student.getName(),
+                        student.getEmail(),
+                        student.isActive()
+                ))
+                .collect(Collectors.toList());
+    }
+
 }
