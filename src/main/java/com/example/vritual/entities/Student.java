@@ -3,8 +3,8 @@ package com.example.vritual.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
-
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "student")
@@ -28,6 +28,15 @@ public class Student {
     @JoinColumn(name = "class_id")
     private SchoolClass schoolClass;
 
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChallengeStudent> challengeStudents;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Arcade> arcades;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StudentCompetence> studentCompetence;
+
     @Column(nullable = false)
     private boolean active = true;
 
@@ -39,4 +48,9 @@ public class Student {
 
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime deletedAt;
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }
