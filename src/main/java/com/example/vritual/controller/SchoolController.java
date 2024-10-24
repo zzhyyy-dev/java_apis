@@ -1,5 +1,7 @@
 package com.example.vritual.controller;
 
+import com.example.vritual.dto.ChangeClassTeacherDTO;
+import com.example.vritual.dto.ChangeStudentClassDTO;
 import com.example.vritual.dto.SchoolClassDTO;
 import com.example.vritual.dto.StudentDTO;
 import com.example.vritual.service.SchoolService;
@@ -11,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/school")
+@RequestMapping("/school")
 public class SchoolController {
 
     private final SchoolService schoolService;
@@ -21,13 +23,11 @@ public class SchoolController {
         this.schoolService = schoolService;
     }
 
-
     @GetMapping("/teacher/{teacherId}/classes")
     public ResponseEntity<List<SchoolClassDTO>> getTeacherClasses(@PathVariable Long teacherId) {
         List<SchoolClassDTO> response = schoolService.getTeacherClasses(teacherId);
         return ResponseEntity.ok(response);
     }
-
 
     @GetMapping("/class/{classId}/students")
     public ResponseEntity<List<StudentDTO>> getStudentsByClass(@PathVariable Long classId) {
@@ -35,17 +35,21 @@ public class SchoolController {
         return ResponseEntity.ok(response);
     }
 
-
-    @PutMapping("/students/{studentId}/changeClass/{newClassId}")
-    public ResponseEntity<StudentDTO> changeStudentClass(@PathVariable Long studentId, @PathVariable Long newClassId) {
-        StudentDTO response = schoolService.changeStudentClass(studentId, newClassId);
+    @PutMapping("/students/changeClass")
+    public ResponseEntity<StudentDTO> changeStudentClass(@RequestBody ChangeStudentClassDTO changeStudentClassDTO) {
+        StudentDTO response = schoolService.changeStudentClass(
+                changeStudentClassDTO.studentId(),
+                changeStudentClassDTO.newClassId()
+        );
         return ResponseEntity.ok(response);
     }
 
-
-    @PutMapping("/classes/{classId}/changeTeacher/{newTeacherId}")
-    public ResponseEntity<Map<String, Object>> changeClassTeacher(@PathVariable Long classId, @PathVariable Long newTeacherId) {
-        Map<String, Object> response = schoolService.changeClassTeacher(classId, newTeacherId);
+    @PutMapping("/classes/changeTeacher")
+    public ResponseEntity<Map<String, Object>> changeClassTeacher(@RequestBody ChangeClassTeacherDTO changeClassTeacherDTO) {
+        Map<String, Object> response = schoolService.changeClassTeacher(
+                changeClassTeacherDTO.classId(),
+                changeClassTeacherDTO.newTeacherId()
+        );
         return ResponseEntity.ok(response);
     }
 }

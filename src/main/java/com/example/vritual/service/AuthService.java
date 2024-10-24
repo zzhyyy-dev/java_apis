@@ -26,11 +26,20 @@ public class AuthService {
     public Long authenticateUser(String userType, String email, String password) {
         switch (userType.toLowerCase()) {
             case "student":
-                return authenticateStudent(email, password);
+                return authenticateStudent(
+                        email,
+                        password
+                );
             case "teacher":
-                return authenticateTeacher(email, password);
+                return authenticateTeacher(
+                        email,
+                        password
+                );
             case "administrator":
-                return authenticateAdministrator(email, password);
+                return authenticateAdministrator(
+                        email,
+                        password
+                );
             default:
                 throw new IllegalArgumentException("Invalid user type");
         }
