@@ -1,14 +1,14 @@
 ### Documentação Completa dos Endpoints
 Usuários <br>
-student.b@example.com	12345
-student.c@example.com	123456
-student.d@example.com	1234567
-admin.1@example.com	1234
-admin.2@example.com	1234
-admin.3@example.com	1234
-prof.a@example.com	1234
-prof.b@example.com	12345
-prof.c@example.com	123456
+student.b@example.com	12345<br>
+student.c@example.com	123456<br>
+student.d@example.com	1234567<br>
+admin.1@example.com	1234<br>
+admin.2@example.com	1234<br>
+admin.3@example.com	1234<br>
+prof.a@example.com	1234<br>
+prof.b@example.com	12345<br>
+prof.c@example.com	123456<br>
 
 
 
