@@ -1,7 +1,5 @@
 package com.example.vritual.service;
 
-import com.example.vritual.dto.AuthResponseDTO;
-import com.example.vritual.dto.LoginDTO;
 import com.example.vritual.entities.Administrator;
 import com.example.vritual.entities.Student;
 import com.example.vritual.entities.Teacher;
@@ -25,29 +23,61 @@ public class AuthService {
     @Autowired
     private AdministratorRepository administratorRepository;
 
-    public AuthResponseDTO authenticateUser(LoginDTO loginDTO) {
-        String email = loginDTO.email();
-        String password = loginDTO.password();
+    public Long authenticateUser(String userType, String email, String password) {
+        switch (userType.toLowerCase()) {
+            case "student":
+                return authenticateStudent(email, password);
+            case "teacher":
+                return authenticateTeacher(email, password);
+            case "administrator":
+                return authenticateAdministrator(email, password);
+            default:
+                throw new IllegalArgumentException("Invalid user type");
+        }
+    }
 
-        // Tenta autenticar como Student
-        Optional<Student> student = studentRepository.findByEmail(email);
-        if (student.isPresent() && student.get().getPassword().equals(password)) {
-            return new AuthResponseDTO("student", student.get().getId());
+    private Long authenticateStudent(String email, String password) {
+        Optional<Student> studentOpt = studentRepository.findByEmail(email);
+
+        if (studentOpt.isEmpty()) {
+            throw new IllegalArgumentException("Invalid email for student");
         }
 
-        // Tenta autenticar como Teacher
-        Optional<Teacher> teacher = teacherRepository.findByEmail(email);
-        if (teacher.isPresent() && teacher.get().getPassword().equals(password)) {
-            return new AuthResponseDTO("teacher", teacher.get().getId());
+        Student student = studentOpt.get();
+        if (!student.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Invalid password for student");
         }
 
-        // Tenta autenticar como Administrator
-        Optional<Administrator> administrator = administratorRepository.findByEmail(email);
-        if (administrator.isPresent() && administrator.get().getPassword().equals(password)) {
-            return new AuthResponseDTO("administrator", administrator.get().getId());
+        return student.getId();
+    }
+
+    private Long authenticateTeacher(String email, String password) {
+        Optional<Teacher> teacherOpt = teacherRepository.findByEmail(email);
+
+        if (teacherOpt.isEmpty()) {
+            throw new IllegalArgumentException("Invalid email for teacher");
         }
 
-        // Se nenhum usuário for encontrado, lança uma exceção
-        throw new IllegalArgumentException("Invalid email or password");
+        Teacher teacher = teacherOpt.get();
+        if (!teacher.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Invalid password for teacher");
+        }
+
+        return teacher.getId();
+    }
+
+    private Long authenticateAdministrator(String email, String password) {
+        Optional<Administrator> adminOpt = administratorRepository.findByEmail(email);
+
+        if (adminOpt.isEmpty()) {
+            throw new IllegalArgumentException("Invalid email for administrator");
+        }
+
+        Administrator admin = adminOpt.get();
+        if (!admin.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Invalid password for administrator");
+        }
+
+        return admin.getId();
     }
 }
