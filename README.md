@@ -6,10 +6,11 @@
    - **Método**: `POST`
    - **URL**: `/api/users`
    - **Descrição**: Cria um novo usuário de qualquer tipo (Student, Teacher ou Administrator).
+   - *EXCESSÃO*: EM CASO SER STUDENT ADICIONE A KEY "class_id": long, exemplo "class_id": 2
    - **Corpo da Requisição**:
      ```json
      {
-       "userType": "student",
+       "userType": "teacher",
        "name": "John Doe",
        "email": "john.doe@example.com",
        "password": "password123"
@@ -21,7 +22,7 @@
        "id": 1,
        "name": "John Doe",
        "email": "john.doe@example.com",
-       "type": "student",
+       "type": "teacher",
        "active": true
      }
      ```
