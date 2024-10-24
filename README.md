@@ -1,4 +1,17 @@
 ### Documentação Completa dos Endpoints
+Usuários
+students:
+Gustavo.Lopes@example.com password123
+pedro.chueiri@example.com password123
+teachers:
+prof.a@example.com 1234
+prof.b@example.com 12345
+administrators:
+admin.1@example.com 1234
+admin.2@example.com 1234
+
+
+
 
 #### **UsersController Endpoints**
 
