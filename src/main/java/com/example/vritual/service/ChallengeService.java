@@ -53,6 +53,7 @@ public class ChallengeService {
         return savedSession.getId();
     }
 
+
     public ChallengeDTO readChallenge(Long challengeId) {
         Challenge challenge = challengeRepository.findById(challengeId)
                 .orElseThrow(() -> new IllegalArgumentException("Challenge not found"));

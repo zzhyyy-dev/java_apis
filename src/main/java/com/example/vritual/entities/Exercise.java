@@ -1,10 +1,6 @@
 package com.example.vritual.entities;
 
-
-
 import jakarta.persistence.*;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "exercises")
@@ -12,7 +8,7 @@ public class Exercise {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Este é o campo que estava faltando
+    private Long id;
 
     @Column(nullable = false, length = 100)
     private String name;
@@ -20,24 +16,39 @@ public class Exercise {
     @Column(length = 255)
     private String description;
 
-    @Column(nullable = false)
-    private boolean active = true;
+    @Column(length = 50)
+    private String difficulty;
 
-    @Column(nullable = false, columnDefinition = "TIMESTAMP")
-    private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(nullable = false, columnDefinition = "TIMESTAMP")
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    public Long getId() {
+        return id;
+    }
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime deletedAt;
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    @ManyToOne
-    @JoinColumn(name = "exercise_tool_id", nullable = false)
-    private ExerciseTool exerciseTool;
+    public String getName() {
+        return name;
+    }
 
-    @Column(nullable = false, length = 50)
-    private String difficulty = "beginner";
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    // Getters and setters omitted for brevity
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
+    }
 }
