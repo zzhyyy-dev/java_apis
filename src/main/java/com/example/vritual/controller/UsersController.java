@@ -1,9 +1,6 @@
 package com.example.vritual.controller;
 
-import com.example.vritual.dto.ChangeClassTeacherDTO;
-import com.example.vritual.dto.ChangeStudentClassDTO;
-import com.example.vritual.dto.SchoolClassDTO;
-import com.example.vritual.dto.StudentDTO;
+
 import com.example.vritual.dto.UserDTO;
 import com.example.vritual.dto.UserReadDTO;
 import com.example.vritual.service.UsersService;
@@ -12,7 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
+
+@CrossOrigin(origins = "http://localhost:5173")
 
 @RestController
 @RequestMapping("/users")
