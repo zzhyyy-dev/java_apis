@@ -2,7 +2,6 @@ package com.example.vritual.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,7 +13,7 @@ public class ChallengeSession {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "json", nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String exercises;
 
     @Column(nullable = false, length = 50)

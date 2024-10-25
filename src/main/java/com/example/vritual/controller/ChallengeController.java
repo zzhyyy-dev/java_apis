@@ -23,11 +23,7 @@ public class ChallengeController {
         return ResponseEntity.ok(challengeId);
     }
 
-    @PostMapping("/session/create")
-    public ResponseEntity<Long> createSession(@RequestBody ChallengeSessionDTO challengeSessionDTO) {
-        Long sessionId = challengeService.createSession(challengeSessionDTO);
-        return ResponseEntity.ok(sessionId);
-    }
+
 
     @GetMapping("/{challengeId}")
     public ResponseEntity<ChallengeDTO> readChallenge(@PathVariable Long challengeId) {
@@ -41,13 +37,11 @@ public class ChallengeController {
         return ResponseEntity.ok(challenges);
     }
 
-    // Updated Controller
     @GetMapping("/student/{studentId}")
     public ResponseEntity<List<StudentChallengeDTO>> readChallengesByStudent(@PathVariable Long studentId) {
         List<StudentChallengeDTO> challenges = challengeService.readChallengesByStudent(studentId);
         return ResponseEntity.ok(challenges);
     }
-
 
     @GetMapping("/session/{sessionId}")
     public ResponseEntity<ChallengeSessionDTO> readSessionChallenge(@PathVariable Long sessionId) {

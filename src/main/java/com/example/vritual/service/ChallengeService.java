@@ -5,8 +5,6 @@ import com.example.vritual.dto.ChallengeSessionDTO;
 import com.example.vritual.dto.StudentChallengeDTO;
 import com.example.vritual.entities.Challenge;
 import com.example.vritual.entities.ChallengeSession;
-import com.example.vritual.entities.Teacher;
-import com.example.vritual.entities.ChallengeStudent;
 import com.example.vritual.repository.ChallengeRepository;
 import com.example.vritual.repository.ChallengeSessionRepository;
 import com.example.vritual.repository.TeacherRepository;
@@ -44,16 +42,6 @@ public class ChallengeService {
         return savedChallenge.getId();
     }
 
-    public Long createSession(ChallengeSessionDTO challengeSessionDTO) {
-        ChallengeSession session = new ChallengeSession();
-        session.setExercises(challengeSessionDTO.exercises());
-        session.setDifficulty(challengeSessionDTO.difficulty());
-        session.setActive(challengeSessionDTO.active());
-        ChallengeSession savedSession = challengeSessionRepository.save(session);
-        return savedSession.getId();
-    }
-
-
     public ChallengeDTO readChallenge(Long challengeId) {
         Challenge challenge = challengeRepository.findById(challengeId)
                 .orElseThrow(() -> new IllegalArgumentException("Challenge not found"));
@@ -75,7 +63,6 @@ public class ChallengeService {
                 .collect(Collectors.toList());
     }
 
-    // Updated Service
     public List<StudentChallengeDTO> readChallengesByStudent(Long studentId) {
         return challengeStudentRepository.findAllByStudentId(studentId).stream()
                 .map(challengeStudent -> {
