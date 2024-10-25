@@ -1,54 +1,40 @@
 package com.example.vritual.entities;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "exercises")
+@Data
 public class Exercise {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @Column(nullable = false, length = 100)
+    @Column(length = 100, nullable = false)
     private String name;
 
     @Column(length = 255)
     private String description;
 
-    @Column(length = 50)
-    private String difficulty;
+    @Column(nullable = false)
+    private boolean active = true;
 
+    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    public Long getId() {
-        return id;
-    }
+    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime deletedAt;
 
-    public String getName() {
-        return name;
-    }
+    @ManyToOne
+    @JoinColumn(name = "exercise_tool_id", nullable = false, insertable = false, updatable = false)
+    private ExerciseTool exerciseTool;
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getDifficulty() {
-        return difficulty;
-    }
-
-    public void setDifficulty(String difficulty) {
-        this.difficulty = difficulty;
-    }
+    @Column(length = 50, nullable = false, columnDefinition = "VARCHAR(50) DEFAULT 'beginner'")
+    private String difficulty = "beginner";
 }
