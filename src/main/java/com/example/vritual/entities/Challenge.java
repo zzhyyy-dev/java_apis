@@ -1,5 +1,7 @@
 package com.example.vritual.entities;
 
+import com.example.vritual.entities.ChallengeSession;
+import com.example.vritual.entities.Teacher;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,6 +18,9 @@ public class Challenge {
 
     @Column(length = 255)
     private String description;
+
+    @Column(length = 255)
+    private String name;
 
     @Column(nullable = false)
     private boolean active = true;

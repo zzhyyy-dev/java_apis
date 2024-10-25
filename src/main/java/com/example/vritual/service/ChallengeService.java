@@ -75,11 +75,17 @@ public class ChallengeService {
                 .collect(Collectors.toList());
     }
 
+    // Updated Service
     public List<StudentChallengeDTO> readChallengesByStudent(Long studentId) {
         return challengeStudentRepository.findAllByStudentId(studentId).stream()
-                .map(challengeStudent -> new StudentChallengeDTO(
-                        challengeStudent.getChallenge().getId(),
-                        challengeStudent.getScore()))
+                .map(challengeStudent -> {
+                    Challenge challenge = challengeRepository.findById(challengeStudent.getChallenge().getId()).orElse(null);
+                    return new StudentChallengeDTO(
+                            challengeStudent.getChallenge().getId(),
+                            challenge != null ? challenge.getName() : "Unknown Challenge",
+                            challengeStudent.getScore()
+                    );
+                })
                 .collect(Collectors.toList());
     }
 
