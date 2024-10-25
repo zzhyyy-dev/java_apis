@@ -29,8 +29,11 @@ public class ExerciseController {
                         exercise.getExerciseTool() != null ? exercise.getExerciseTool().getId() : null,
                         exercise.getDifficulty(),
                         exercise.getExerciseTool() != null ? exercise.getExerciseTool().getLeftTool().getId() : null,
+                        exercise.getExerciseTool() != null ? exercise.getExerciseTool().getLeftTool().getName() : null,
                         exercise.getExerciseTool() != null ? exercise.getExerciseTool().getRightTool().getId() : null,
-                        exercise.getExerciseTool() != null && exercise.getExerciseTool().getModifier() != null ? exercise.getExerciseTool().getModifier().getId() : null
+                        exercise.getExerciseTool() != null ? exercise.getExerciseTool().getRightTool().getName() : null,
+                        exercise.getExerciseTool() != null && exercise.getExerciseTool().getModifier() != null ? exercise.getExerciseTool().getModifier().getId() : null,
+                        exercise.getExerciseTool() != null && exercise.getExerciseTool().getModifier() != null ? exercise.getExerciseTool().getModifier().getName() : null
                 ))
                 .collect(Collectors.toList());
     }

@@ -2,9 +2,11 @@ package com.example.vritual.service;
 
 import com.example.vritual.dto.ChallengeDTO;
 import com.example.vritual.dto.ChallengeSessionDTO;
+import com.example.vritual.dto.CreateChallengeDTO;
 import com.example.vritual.dto.StudentChallengeDTO;
 import com.example.vritual.entities.Challenge;
 import com.example.vritual.entities.ChallengeSession;
+import com.example.vritual.entities.Teacher;
 import com.example.vritual.repository.ChallengeRepository;
 import com.example.vritual.repository.ChallengeSessionRepository;
 import com.example.vritual.repository.TeacherRepository;
@@ -30,17 +32,6 @@ public class ChallengeService {
     @Autowired
     private ChallengeStudentRepository challengeStudentRepository;
 
-    public Long createChallenge(ChallengeDTO challengeDTO) {
-        Challenge challenge = new Challenge();
-        challenge.setDescription(challengeDTO.description());
-        challenge.setActive(challengeDTO.active());
-        challenge.setChallengeSession(challengeSessionRepository.findById(challengeDTO.challengeSessionId())
-                .orElseThrow(() -> new IllegalArgumentException("Challenge Session not found")));
-        challenge.setTeacher(teacherRepository.findById(challengeDTO.teacherId())
-                .orElseThrow(() -> new IllegalArgumentException("Teacher not found")));
-        Challenge savedChallenge = challengeRepository.save(challenge);
-        return savedChallenge.getId();
-    }
 
     public ChallengeDTO readChallenge(Long challengeId) {
         Challenge challenge = challengeRepository.findById(challengeId)
@@ -53,14 +44,10 @@ public class ChallengeService {
         );
     }
 
-    public List<ChallengeDTO> readChallengesByTeacher(Long teacherId) {
-        return challengeRepository.findAllByTeacher_Id(teacherId).stream()
-                .map(challenge -> new ChallengeDTO(
-                        challenge.getChallengeSession().getId(),
-                        challenge.getDescription(),
-                        challenge.isActive(),
-                        challenge.getTeacher().getId()))
-                .collect(Collectors.toList());
+    public List<Challenge> getChallengesByTeacherId(Long teacherId) {
+        Teacher teacher = teacherRepository.findById(teacherId)
+                .orElseThrow(() -> new RuntimeException("Teacher not found"));
+        return challengeRepository.findAllByTeacher_Id(teacher.getId());
     }
 
     public List<StudentChallengeDTO> readChallengesByStudent(Long studentId) {
@@ -84,5 +71,21 @@ public class ChallengeService {
                 session.getDifficulty(),
                 session.isActive()
         );
+    }
+
+    public Challenge createChallenge(CreateChallengeDTO createChallengeDTO) {
+        Challenge challenge = new Challenge();
+        challenge.setName(createChallengeDTO.getName());
+        challenge.setDescription(createChallengeDTO.getDescription());
+
+        ChallengeSession challengeSession = challengeSessionRepository.findById(createChallengeDTO.getChallengeSessionId())
+                .orElseThrow(() -> new RuntimeException("Challenge session not found"));
+        challenge.setChallengeSession(challengeSession);
+
+        Teacher teacher = teacherRepository.findById(createChallengeDTO.getTeacherId())
+                .orElseThrow(() -> new RuntimeException("Teacher not found"));
+        challenge.setTeacher(teacher);
+
+        return challengeRepository.save(challenge);
     }
 }

@@ -1,14 +1,15 @@
 package com.example.vritual.controller;
 
-import com.example.vritual.dto.ChallengeDTO;
-import com.example.vritual.dto.ChallengeSessionDTO;
-import com.example.vritual.dto.StudentChallengeDTO;
+import com.example.vritual.dto.*;
+import com.example.vritual.entities.Challenge;
 import com.example.vritual.service.ChallengeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @CrossOrigin(origins = "http://localhost:5173")
@@ -20,13 +21,12 @@ public class ChallengeController {
     @Autowired
     private ChallengeService challengeService;
 
+
     @PostMapping("/create")
-    public ResponseEntity<Long> createChallenge(@RequestBody ChallengeDTO challengeDTO) {
-        Long challengeId = challengeService.createChallenge(challengeDTO);
-        return ResponseEntity.ok(challengeId);
+    public ResponseEntity<Long> createChallenge(@RequestBody CreateChallengeDTO createChallengeDTO) {
+        Challenge createdChallenge = challengeService.createChallenge(createChallengeDTO);
+        return ResponseEntity.ok(createdChallenge.getId());
     }
-
-
 
     @GetMapping("/{challengeId}")
     public ResponseEntity<ChallengeDTO> readChallenge(@PathVariable Long challengeId) {
@@ -35,11 +35,18 @@ public class ChallengeController {
     }
 
     @GetMapping("/teacher/{teacherId}")
-    public ResponseEntity<List<ChallengeDTO>> readChallengesByTeacher(@PathVariable Long teacherId) {
-        List<ChallengeDTO> challenges = challengeService.readChallengesByTeacher(teacherId);
-        return ResponseEntity.ok(challenges);
+    public ResponseEntity<List<ChallengeResponseDTO>> getChallengesByTeacherId(@PathVariable Long teacherId) {
+        List<Challenge> challenges = challengeService.getChallengesByTeacherId(teacherId);
+        List<ChallengeResponseDTO> response = challenges.stream()
+                .map(challenge -> new ChallengeResponseDTO(
+                        challenge.getId(),
+                        challenge.getName(),
+                        challenge.getDescription(),
+                        challenge.getChallengeSession().getId()
+                ))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
     }
-
     @GetMapping("/student/{studentId}")
     public ResponseEntity<List<StudentChallengeDTO>> readChallengesByStudent(@PathVariable Long studentId) {
         List<StudentChallengeDTO> challenges = challengeService.readChallengesByStudent(studentId);
