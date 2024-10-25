@@ -1,9 +1,6 @@
 package com.example.vritual.controller;
 
-import com.example.vritual.dto.ChangeClassTeacherDTO;
-import com.example.vritual.dto.ChangeStudentClassDTO;
-import com.example.vritual.dto.SchoolClassDTO;
-import com.example.vritual.dto.StudentDTO;
+import com.example.vritual.dto.*;
 import com.example.vritual.service.SchoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +18,11 @@ public class SchoolController {
     @Autowired
     public SchoolController(SchoolService schoolService) {
         this.schoolService = schoolService;
+    }
+
+    @GetMapping("/classes")
+    public ResponseEntity<List<ClassesDTO>> getAllClasses() {
+        return ResponseEntity.ok(schoolService.getAllClasses());
     }
 
     @GetMapping("/teacher/{teacherId}/classes")

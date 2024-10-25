@@ -1,5 +1,6 @@
 package com.example.vritual.service;
 
+import com.example.vritual.dto.ClassesDTO;
 import com.example.vritual.dto.SchoolClassDTO;
 import com.example.vritual.dto.StudentDTO;
 import com.example.vritual.entities.SchoolClass;
@@ -28,6 +29,18 @@ public class SchoolService {
     @Autowired
     private TeacherRepository teacherRepository;
 
+    public List<ClassesDTO> getAllClasses() {
+        return schoolClassRepository.findAll().stream().map(schoolClass -> {
+            Teacher teacher = teacherRepository.findById(schoolClass.getTeacher().getId()).orElse(null);
+            return new ClassesDTO(
+                    schoolClass.getId(),
+                    schoolClass.getDescription(),
+                    schoolClass.getName(),
+                    teacher != null ? teacher.getId() : null,
+                    teacher != null ? teacher.getName() : null
+            );
+        }).collect(Collectors.toList());
+    }
 
     public List<SchoolClassDTO> getTeacherClasses(Long teacherId) {
         Teacher teacher = teacherRepository.findById(teacherId)
