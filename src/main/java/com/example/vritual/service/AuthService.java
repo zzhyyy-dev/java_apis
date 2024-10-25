@@ -1,5 +1,6 @@
 package com.example.vritual.service;
 
+import com.example.vritual.dto.StudentAuthResponseDTO;
 import com.example.vritual.entities.Administrator;
 import com.example.vritual.entities.Student;
 import com.example.vritual.entities.Teacher;
@@ -23,29 +24,16 @@ public class AuthService {
     @Autowired
     private AdministratorRepository administratorRepository;
 
-    public Long authenticateUser(String userType, String email, String password) {
-        switch (userType.toLowerCase()) {
-            case "student":
-                return authenticateStudent(
-                        email,
-                        password
-                );
-            case "teacher":
-                return authenticateTeacher(
-                        email,
-                        password
-                );
-            case "administrator":
-                return authenticateAdministrator(
-                        email,
-                        password
-                );
-            default:
-                throw new IllegalArgumentException("Invalid user type");
-        }
+    public Object authenticateUser(String userType, String email, String password) {
+        return switch (userType.toLowerCase()) {
+            case "student" -> authenticateStudent(email, password);
+            case "teacher" -> authenticateTeacher(email, password);
+            case "administrator" -> authenticateAdministrator(email, password);
+            default -> throw new IllegalArgumentException("Invalid user type");
+        };
     }
 
-    private Long authenticateStudent(String email, String password) {
+    private StudentAuthResponseDTO authenticateStudent(String email, String password) {
         Optional<Student> studentOpt = studentRepository.findByEmail(email);
 
         if (studentOpt.isEmpty()) {
@@ -57,7 +45,8 @@ public class AuthService {
             throw new IllegalArgumentException("Invalid password for student");
         }
 
-        return student.getId();
+        Long classId = student.getSchoolClass() != null ? student.getSchoolClass().getId() : null;
+        return new StudentAuthResponseDTO(student.getId(), classId);
     }
 
     private Long authenticateTeacher(String email, String password) {

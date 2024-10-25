@@ -1,6 +1,7 @@
 package com.example.vritual.controller;
 
 import com.example.vritual.dto.LoginDTO;
+import com.example.vritual.dto.StudentAuthResponseDTO;
 import com.example.vritual.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +17,19 @@ public class AuthController {
 
     @PostMapping("/login")
     public Map<String, Object> loginUser(@RequestBody LoginDTO loginDTO) {
-        Long userId = authService.authenticateUser(
+        Object authResponse = authService.authenticateUser(
                 loginDTO.userType(),
                 loginDTO.email(),
                 loginDTO.password()
         );
 
-        return Map.of("userId", userId);
+        if (authResponse instanceof StudentAuthResponseDTO studentAuthResponse) {
+            return Map.of(
+                    "userId", studentAuthResponse.id(),
+                    "classId", studentAuthResponse.classId()
+            );
+        } else {
+            return Map.of("userId", authResponse);
+        }
     }
 }
