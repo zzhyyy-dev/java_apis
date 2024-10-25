@@ -33,4 +33,5 @@ public class ChallengeStudent {
 
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime deletedAt;
+
 }
