@@ -24,5 +24,4 @@ public class ExerciseTool {
     @ManyToOne
     @JoinColumn(name = "modifier_id")
     private Modifier modifier;
-
 }
