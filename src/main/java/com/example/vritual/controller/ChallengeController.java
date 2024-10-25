@@ -1,8 +1,8 @@
-
 package com.example.vritual.controller;
 
 import com.example.vritual.dto.ChallengeDTO;
 import com.example.vritual.dto.ChallengeSessionDTO;
+import com.example.vritual.dto.StudentChallengeDTO;
 import com.example.vritual.service.ChallengeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/challenge")
+@RequestMapping("/api/challenges")
 public class ChallengeController {
 
     @Autowired
@@ -29,21 +29,27 @@ public class ChallengeController {
         return ResponseEntity.ok(sessionId);
     }
 
-    @GetMapping("/read/{challengeId}")
+    @GetMapping("/{challengeId}")
     public ResponseEntity<ChallengeDTO> readChallenge(@PathVariable Long challengeId) {
-        ChallengeDTO challenge = challengeService.readChallenge(challengeId);
-        return ResponseEntity.ok(challenge);
+        ChallengeDTO challengeDTO = challengeService.readChallenge(challengeId);
+        return ResponseEntity.ok(challengeDTO);
     }
 
-    @GetMapping("/readMyChallenges/{userType}/{userId}")
-    public ResponseEntity<List<Object>> readMyChallenges(@PathVariable String userType, @PathVariable Long userId) {
-        List<Object> challenges = challengeService.readMyChallenges(userType, userId);
+    @GetMapping("/teacher/{teacherId}")
+    public ResponseEntity<List<ChallengeDTO>> readChallengesByTeacher(@PathVariable Long teacherId) {
+        List<ChallengeDTO> challenges = challengeService.readChallengesByTeacher(teacherId);
         return ResponseEntity.ok(challenges);
     }
 
-    @GetMapping("/session/read/{sessionId}")
+    @GetMapping("/student/{studentId}")
+    public ResponseEntity<List<StudentChallengeDTO>> readChallengesByStudent(@PathVariable Long studentId) {
+        List<StudentChallengeDTO> challenges = challengeService.readChallengesByStudent(studentId);
+        return ResponseEntity.ok(challenges);
+    }
+
+    @GetMapping("/session/{sessionId}")
     public ResponseEntity<ChallengeSessionDTO> readSessionChallenge(@PathVariable Long sessionId) {
-        ChallengeSessionDTO session = challengeService.readSessionChallenge(sessionId);
-        return ResponseEntity.ok(session);
+        ChallengeSessionDTO sessionDTO = challengeService.readSessionChallenge(sessionId);
+        return ResponseEntity.ok(sessionDTO);
     }
 }

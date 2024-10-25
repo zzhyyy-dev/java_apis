@@ -2,10 +2,15 @@ package com.example.vritual.service;
 
 import com.example.vritual.dto.ChallengeDTO;
 import com.example.vritual.dto.ChallengeSessionDTO;
+import com.example.vritual.dto.StudentChallengeDTO;
 import com.example.vritual.entities.Challenge;
 import com.example.vritual.entities.ChallengeSession;
+import com.example.vritual.entities.Teacher;
+import com.example.vritual.entities.ChallengeStudent;
 import com.example.vritual.repository.ChallengeRepository;
 import com.example.vritual.repository.ChallengeSessionRepository;
+import com.example.vritual.repository.TeacherRepository;
+import com.example.vritual.repository.ChallengeStudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +26,20 @@ public class ChallengeService {
     @Autowired
     private ChallengeSessionRepository challengeSessionRepository;
 
+    @Autowired
+    private TeacherRepository teacherRepository;
+
+    @Autowired
+    private ChallengeStudentRepository challengeStudentRepository;
+
     public Long createChallenge(ChallengeDTO challengeDTO) {
         Challenge challenge = new Challenge();
         challenge.setDescription(challengeDTO.description());
-        challenge.setTeacherId(challengeDTO.teacherId());
         challenge.setActive(challengeDTO.active());
+        challenge.setChallengeSession(challengeSessionRepository.findById(challengeDTO.challengeSessionId())
+                .orElseThrow(() -> new IllegalArgumentException("Challenge Session not found")));
+        challenge.setTeacher(teacherRepository.findById(challengeDTO.teacherId())
+                .orElseThrow(() -> new IllegalArgumentException("Teacher not found")));
         Challenge savedChallenge = challengeRepository.save(challenge);
         return savedChallenge.getId();
     }
@@ -43,31 +57,29 @@ public class ChallengeService {
         Challenge challenge = challengeRepository.findById(challengeId)
                 .orElseThrow(() -> new IllegalArgumentException("Challenge not found"));
         return new ChallengeDTO(
-                challenge.getChallengeSessionId(),
+                challenge.getChallengeSession().getId(),
                 challenge.getDescription(),
-                challenge.getActive(),
-                challenge.getTeacherId()
+                challenge.isActive(),
+                challenge.getTeacher().getId()
         );
     }
 
-    public List<Object> readMyChallenges(String userType, Long userId) {
-        if (userType.equalsIgnoreCase("teacher")) {
-            return challengeRepository.findByTeacherId(userId).stream()
-                    .map(challenge -> new ChallengeDTO(
-                            challenge.getChallengeSessionId(),
-                            challenge.getDescription(),
-                            challenge.getActive(),
-                            challenge.getTeacherId()))
-                    .collect(Collectors.toList());
-        } else if (userType.equalsIgnoreCase("student")) {
-            return challengeRepository.findByStudentId(userId).stream()
-                    .map(challenge -> new StudentChallengeDTO(
-                            challenge.getId(),
-                            challenge.getScore()))
-                    .collect(Collectors.toList());
-        } else {
-            throw new IllegalArgumentException("Invalid user type");
-        }
+    public List<ChallengeDTO> readChallengesByTeacher(Long teacherId) {
+        return challengeRepository.findAllByTeacher_Id(teacherId).stream()
+                .map(challenge -> new ChallengeDTO(
+                        challenge.getChallengeSession().getId(),
+                        challenge.getDescription(),
+                        challenge.isActive(),
+                        challenge.getTeacher().getId()))
+                .collect(Collectors.toList());
+    }
+
+    public List<StudentChallengeDTO> readChallengesByStudent(Long studentId) {
+        return challengeStudentRepository.findAllByStudentId(studentId).stream()
+                .map(challengeStudent -> new StudentChallengeDTO(
+                        challengeStudent.getChallenge().getId(),
+                        challengeStudent.getScore()))
+                .collect(Collectors.toList());
     }
 
     public ChallengeSessionDTO readSessionChallenge(Long sessionId) {
@@ -76,7 +88,7 @@ public class ChallengeService {
         return new ChallengeSessionDTO(
                 session.getExercises(),
                 session.getDifficulty(),
-                session.getActive()
+                session.isActive()
         );
     }
 }
