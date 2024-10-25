@@ -1,8 +1,10 @@
 package com.example.vritual.controller;
 
 import com.example.vritual.dto.*;
+import com.example.vritual.entities.SchoolClass;
 import com.example.vritual.service.SchoolService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,5 +58,17 @@ public class SchoolController {
                 changeClassTeacherDTO.newTeacherId()
         );
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping
+    public ResponseEntity<ClassResponseDTO> createClass(@RequestBody CreateClassDTO createClassDTO) {
+        ClassResponseDTO newClass = schoolService.createClass(createClassDTO);
+        return new ResponseEntity<>(newClass, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteClass(@PathVariable Long id) {
+        schoolService.deleteClass(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

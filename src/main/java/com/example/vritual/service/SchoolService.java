@@ -1,8 +1,6 @@
 package com.example.vritual.service;
 
-import com.example.vritual.dto.ClassesDTO;
-import com.example.vritual.dto.SchoolClassDTO;
-import com.example.vritual.dto.StudentDTO;
+import com.example.vritual.dto.*;
 import com.example.vritual.entities.SchoolClass;
 import com.example.vritual.entities.Student;
 import com.example.vritual.entities.Teacher;
@@ -15,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -106,5 +105,42 @@ public class SchoolService {
                 "newTeacherId", newTeacher.getId(),
                 "message", "Teacher changed successfully"
         );
+    }
+
+    public ClassResponseDTO createClass(CreateClassDTO createClassDTO) {
+        Optional<Teacher> teacherOptional = teacherRepository.findById(createClassDTO.getTeacherId());
+        if (teacherOptional.isEmpty()) {
+            throw new RuntimeException("Teacher not found");
+        }
+
+        Teacher teacher = teacherOptional.get();
+
+        SchoolClass schoolClass = new SchoolClass();
+        schoolClass.setName(createClassDTO.getName());
+        schoolClass.setDescription(createClassDTO.getDescription());
+        schoolClass.setTeacher(teacher);
+        schoolClass.setCreatedAt(LocalDateTime.now());
+        schoolClass.setUpdatedAt(LocalDateTime.now());
+
+        SchoolClass savedClass = schoolClassRepository.save(schoolClass);
+
+        ClassResponseDTO responseDTO = new ClassResponseDTO();
+        responseDTO.setId(savedClass.getId());
+        responseDTO.setTeacherId(teacher.getId());
+        responseDTO.setName(savedClass.getName());
+        responseDTO.setTeacherName(teacher.getName());
+
+        return responseDTO;
+    }
+
+    public void deleteClass(Long id) {
+        Optional<SchoolClass> schoolClassOptional = schoolClassRepository.findById(id);
+        if (schoolClassOptional.isEmpty()) {
+            throw new RuntimeException("School class not found");
+        }
+
+        SchoolClass schoolClass = schoolClassOptional.get();
+        schoolClass.setActive(false);
+        schoolClassRepository.save(schoolClass);
     }
 }
