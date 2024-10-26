@@ -12,6 +12,29 @@ The Virtual Learning System is designed to facilitate education through efficien
 http://localhost:8080
 ```
 
+## Users
+### Admin
+````
+admin.1@example.com	1234
+admin.2@example.com	1234
+admin.3@example.com	1234
+````
+
+### Teacher
+````
+prof.a@example.com	1234
+prof.b@example.com	12345
+prof.c@example.com	123456
+````
+
+### Student
+````
+student.b@example.com	12345
+student.c@example.com	123456
+student.d@example.com	1234567
+````
+
+
 ## Key Features
 
 - **User Management**: Create, update, deactivate, and list users of different types: students, teachers, and administrators.
