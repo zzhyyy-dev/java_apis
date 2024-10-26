@@ -202,7 +202,7 @@ Retrieves a list of all exercises with their tools and modifiers.
     "rightToolName": "Laparoscopic Grasper",
     "modifierId": null,
     "modifierName": null
-  },
+  }
 ]
 ```
 
@@ -504,7 +504,7 @@ Creates a new user of the specified type.
 {
   "name": "John Doe",
   "email": "john.doe@example.com",
-  "password": "password123",
+  "password": "password123"
 }
 ```
 
