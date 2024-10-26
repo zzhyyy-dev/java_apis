@@ -22,7 +22,7 @@ public class ChallengeStudent {
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
 
-    @Column(columnDefinition = "json")
+    @Column(columnDefinition = "TEXT")
     private String score;
 
     @Column(nullable = false, columnDefinition = "TIMESTAMP")
