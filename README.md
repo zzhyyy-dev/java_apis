@@ -58,7 +58,6 @@ Challenges are a crucial part of the Virtual Learning System. They help in engag
 - **GET `/challenges/{challengeId}`**: Retrieve details of a specific challenge.
 - **GET `/challenges/teacher/{teacherId}`**: Get all challenges created by a specific teacher.
 - **GET `/challenges/student/{studentId}`**: Get all challenges assigned to a student.
-- **GET `/challenges/session/{sessionId}`**: Retrieve details of a specific challenge session.
 
 ## Session Management
 
@@ -922,33 +921,4 @@ Retrieves all challenges assigned to a specific student.
 
 - **Error Response (404 Not Found)**:
     - If the `studentId` is not found: Returns "Student not found".
-
-### GET `/challenges/session/{sessionId}`
-
-Retrieves details of a specific challenge session.
-
-##### Request Rules
-
-- **URL**: `/challenges/session/{sessionId}`
-- **Method**: `GET`
-- **Path Parameters**:
-    - `sessionId` (Long): The ID of the challenge session to retrieve.
-
-##### Response Rules
-
-- **Success Response (200 OK)**:
-    - Returns the details of the challenge session.
-
-**Example Success Response**:
-
-```json
-{
-  "exercises": "Exercise 1, Exercise 2",
-  "difficulty": "Medium",
-  "active": true
-}
-```
-
-- **Error Response (404 Not Found)**:
-    - If the `sessionId` is not found: Returns "Challenge Session not found".
 

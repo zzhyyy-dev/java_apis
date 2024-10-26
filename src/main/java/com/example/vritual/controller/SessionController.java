@@ -1,5 +1,6 @@
 package com.example.vritual.controller;
 
+import com.example.vritual.dto.ChallengeSessionDTO;
 import com.example.vritual.dto.SessionDTO;
 import com.example.vritual.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,9 @@ public class SessionController {
         return new ResponseEntity<>(createdSession, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<SessionDTO> getSessionById(@PathVariable Long id) {
-        return sessionService.getSessionById(id)
-                .map(ResponseEntity::ok)
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    @GetMapping("/{sessionId}")
+    public ResponseEntity<ChallengeSessionDTO> readSessionChallenge(@PathVariable Long sessionId) {
+        ChallengeSessionDTO sessionDTO = sessionService.readSessionChallenge(sessionId);
+        return ResponseEntity.ok(sessionDTO);
     }
 }

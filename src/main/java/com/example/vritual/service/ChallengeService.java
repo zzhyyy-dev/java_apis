@@ -63,15 +63,7 @@ public class ChallengeService {
                 .collect(Collectors.toList());
     }
 
-    public ChallengeSessionDTO readSessionChallenge(Long sessionId) {
-        ChallengeSession session = challengeSessionRepository.findById(sessionId)
-                .orElseThrow(() -> new IllegalArgumentException("Challenge Session not found"));
-        return new ChallengeSessionDTO(
-                session.getExercises(),
-                session.getDifficulty(),
-                session.isActive()
-        );
-    }
+
 
     public Challenge createChallenge(CreateChallengeDTO createChallengeDTO) {
         Challenge challenge = new Challenge();

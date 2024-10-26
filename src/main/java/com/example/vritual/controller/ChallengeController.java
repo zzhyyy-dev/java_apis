@@ -53,9 +53,5 @@ public class ChallengeController {
         return ResponseEntity.ok(challenges);
     }
 
-    @GetMapping("/session/{sessionId}")
-    public ResponseEntity<ChallengeSessionDTO> readSessionChallenge(@PathVariable Long sessionId) {
-        ChallengeSessionDTO sessionDTO = challengeService.readSessionChallenge(sessionId);
-        return ResponseEntity.ok(sessionDTO);
-    }
+
 }
