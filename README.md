@@ -191,18 +191,18 @@ Retrieves a list of all exercises with their tools and modifiers.
 [
   {
     "id": 1,
-    "name": "Push-up",
-    "description": "A basic upper body exercise",
+    "name": "Tissue Cutting",
+    "description": "Exercise focused on cutting synthetic tissue using laparoscopic scissors",
     "active": true,
-    "exerciseToolId": 3,
-    "difficulty": "Medium",
-    "leftToolId": 5,
-    "leftToolName": "Left Dumbbell",
-    "rightToolId": 6,
-    "rightToolName": "Right Dumbbell",
-    "modifierId": 2,
-    "modifierName": "Resistance Band"
-  }
+    "exerciseToolId": 6,
+    "difficulty": "beginner",
+    "leftToolId": 6,
+    "leftToolName": "Laparoscopic Scissors",
+    "rightToolId": 7,
+    "rightToolName": "Laparoscopic Grasper",
+    "modifierId": null,
+    "modifierName": null
+  },
 ]
 ```
 
@@ -232,15 +232,41 @@ Retrieves the names of specific exercises based on their IDs.
 
 ```json
 [
-  {
-    "exercisesId": 1,
-    "name": "Push-up",
-    "difficulty": "Medium",
-    "exerciseToolId": 3,
-    "leftToolName": "Left Dumbbell",
-    "rightToolName": "Right Dumbbell",
-    "modifierName": "Resistance Band"
-  }
+  [
+    {
+      "exercisesId": 1,
+      "name": "Tissue Cutting",
+      "difficulty": "beginner",
+      "exerciseToolId": 6,
+      "exerciseToolName": null,
+      "exerciseToolDescription": null,
+      "leftToolName": "Laparoscopic Scissors",
+      "rightToolName": "Laparoscopic Grasper",
+      "modifierName": null
+    },
+    {
+      "exercisesId": 2,
+      "name": "Object Grasping",
+      "difficulty": "intermediate",
+      "exerciseToolId": 7,
+      "exerciseToolName": null,
+      "exerciseToolDescription": null,
+      "leftToolName": "Needle Holder",
+      "rightToolName": "Suction Tool",
+      "modifierName": null
+    },
+    {
+      "exercisesId": 3,
+      "name": "Needle Suturing",
+      "difficulty": "advanced",
+      "exerciseToolId": 8,
+      "exerciseToolName": null,
+      "exerciseToolDescription": null,
+      "leftToolName": "Laparoscopic Scissors",
+      "rightToolName": "Needle Holder",
+      "modifierName": null
+    }
+  ]
 ]
 ```
 
@@ -268,9 +294,9 @@ Creates a new session.
 
 ```json
 {
-  "exercises": "Exercise 1, Exercise 2",
-  "difficulty": "Hard",
-  "active": true
+  "exercises": "[{\"order\": 1, \"exercises_id\": 7}, {\"order\": 2, \"exercises_id\": 6}, {\"order\": 3, \"exercises_id\": 9}, {\"order\": 4, \"exercises_id\": 8}, {\"order\": 5, \"exercises_id\": 10}, {\"order\": 6, \"exercises_id\": 7}, {\"order\": 7, \"exercises_id\": 9}, {\"order\": 8, \"exercises_id\": 6}]",
+  "difficulty": "advance",
+  "active": "true"
 }
 ```
 
@@ -283,12 +309,13 @@ Creates a new session.
 
 ```json
 {
-  "id": 1,
-  "exercises": "Exercise 1, Exercise 2",
-  "difficulty": "Hard",
+  "id": 20,
+  "exercises": "[{\"order\": 1, \"exercises_id\": 7}, {\"order\": 2, \"exercises_id\": 6}, {\"order\": 3, \"exercises_id\": 9}, {\"order\": 4, \"exercises_id\": 8}, {\"order\": 5, \"exercises_id\": 10}, {\"order\": 6, \"exercises_id\": 7}, {\"order\": 7, \"exercises_id\": 9}, {\"order\": 8, \"exercises_id\": 6}]",
+  "difficulty": "advance",
   "active": true,
-  "createdAt": "2024-10-25T10:00:00",
-  "updatedAt": "2024-10-25T10:00:00"
+  "createdAt": "2024-10-25T21:54:22.1103592",
+  "updatedAt": "2024-10-25T21:54:22.1103592",
+  "deletedAt": null
 }
 ```
 
@@ -312,13 +339,9 @@ Retrieves details of a specific session.
 
 ```json
 {
-  "id": 1,
-  "exercises": "Exercise 1, Exercise 2",
-  "difficulty": "Hard",
-  "active": true,
-  "createdAt": "2024-10-25T10:00:00",
-  "updatedAt": "2024-10-25T10:00:00",
-  "deletedAt": null
+  "exercises": "[{\"order\": 1, \"exercises_id\": 6}, {\"order\": 2, \"exercises_id\": 7}, {\"order\": 3, \"exercises_id\": 8}, {\"order\": 4, \"exercises_id\": 9}, {\"order\": 5, \"exercises_id\": 10}, {\"order\": 6, \"exercises_id\": 6}, {\"order\": 7, \"exercises_id\": 7}, {\"order\": 8, \"exercises_id\": 8}]",
+  "difficulty": "beginner",
+  "active": true
 }
 ```
 
@@ -347,18 +370,56 @@ Retrieves the competences of a specific student.
 
 ```json
 [
-  {
-    "id": 1,
-    "competenceName": "Mathematics",
-    "studentId": 101,
-    "score": 85
-  },
-  {
-    "id": 2,
-    "competenceName": "Science",
-    "studentId": 101,
-    "score": 90
-  }
+  [
+    {
+      "id": 1,
+      "competenceName": "Coordenação Bilateral",
+      "studentId": 1,
+      "score": 85
+    },
+    {
+      "id": 2,
+      "competenceName": "Eficiência de execução",
+      "studentId": 1,
+      "score": 90
+    },
+    {
+      "id": 3,
+      "competenceName": "Habilidade de Manipulação com Ferramentas - Laparoscopic Scissors",
+      "studentId": 1,
+      "score": 88
+    },
+    {
+      "id": 4,
+      "competenceName": "Habilidade de Manipulação com Ferramentas - Laparoscopic Grasper",
+      "studentId": 1,
+      "score": 87
+    },
+    {
+      "id": 5,
+      "competenceName": "Habilidade de Manipulação com Ferramentas - Needle Holder",
+      "studentId": 1,
+      "score": 89
+    },
+    {
+      "id": 6,
+      "competenceName": "Habilidade de Manipulação com Ferramentas - Suction Tool",
+      "studentId": 1,
+      "score": 92
+    },
+    {
+      "id": 7,
+      "competenceName": "Habilidade de Manipulação com Ferramentas - Endoscope",
+      "studentId": 1,
+      "score": 91
+    },
+    {
+      "id": 8,
+      "competenceName": "Gestão do Tempo e Eficiência Operacional",
+      "studentId": 1,
+      "score": 86
+    }
+  ]
 ]
 ```
 
@@ -391,7 +452,7 @@ Creates a new user of the specified type.
     - `password` (string): The user's password.
     - `classId` (Long, optional for students): The ID of the class for the student.
 
-**Example Request Body**:
+**Example Request Body Student**:
 
 ```json
 {
@@ -418,6 +479,45 @@ Creates a new user of the specified type.
 }
 ```
 
+##### Response Rules
+
+- **Success Response (200 OK)**:
+    - Returns the created user's details.
+
+##### Request Rules
+
+- **URL**: `/users/{userType}`
+- **Method**: `POST`
+- **Path Parameters**:
+    - `userType` (string): Must be either `student`, `teacher`, or `administrator`.
+- **Headers**:
+    - `Content-Type: application/json`
+- **Body Parameters**:
+    - `name` (string): The name of the user.
+    - `email` (string): Must be a valid email address.
+    - `password` (string): The user's password.
+
+
+**Example Request Body**:
+
+```json
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "password": "password123",
+}
+```
+
+**Example Success Response**:
+
+```json
+{
+  "id": 1,
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "active": true
+}
+```
 ### PUT `/users/{userType}/{id}`
 
 Updates an existing user of the specified type.
