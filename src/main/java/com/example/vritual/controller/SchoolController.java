@@ -65,7 +65,6 @@ public class SchoolController {
         ClassResponseDTO newClass = schoolService.createClass(createClassDTO);
         return new ResponseEntity<>(newClass, HttpStatus.CREATED);
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteClass(@PathVariable Long id) {
         schoolService.deleteClass(id);

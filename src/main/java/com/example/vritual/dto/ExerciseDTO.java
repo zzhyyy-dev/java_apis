@@ -6,7 +6,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ExerciseDTO {
-    // Getters and setters
     private Integer id;
     private String name;
     private String description;
